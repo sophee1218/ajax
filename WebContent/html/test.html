@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<input type="number" id="num1">
+<input type="number" id="num2">
+
+<button onclick="list()">계산기 버튼!</button>
+	<script>
+function list(){
+var xhr = new XMLHttpRequest();
+xhr.open('Get','/test?list=true');
+xhr.onreadystatechange = function(){
+	if(xhr.readyState==4){
+		var strs = JSON.parse(xhr.responseText);
+		alert(strs[0]);
+		alert(strs[1]);
+	}
+}
+xhr.send();
+}
+</script>
+</body>
+</html>
