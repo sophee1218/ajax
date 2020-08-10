@@ -36,7 +36,6 @@ public class TestFilter implements Filter {
 
 	public void init(FilterConfig fConfig) throws ServletException {
 		String excludePatterns = fConfig.getInitParameter("excludes");
-		System.out.println(excludePatterns);
 	}
 
 }
