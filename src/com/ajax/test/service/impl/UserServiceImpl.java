@@ -1,9 +1,9 @@
-package com.ajax.service.impl;
+package com.ajax.test.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.ajax.service.UserService;
+import com.ajax.test.service.UserService;
 
 public class UserServiceImpl implements UserService
 {

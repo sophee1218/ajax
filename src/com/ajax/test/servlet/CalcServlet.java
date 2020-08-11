@@ -1,4 +1,4 @@
-package com.ajax.servlet;
+package com.ajax.test.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;

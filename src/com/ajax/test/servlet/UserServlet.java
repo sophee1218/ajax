@@ -1,4 +1,4 @@
-package com.ajax.servlet;
+package com.ajax.test.servlet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.ajax.service.UserService;
-import com.ajax.service.impl.UserServiceImpl;
+import com.ajax.test.service.UserService;
+import com.ajax.test.service.impl.UserServiceImpl;
 import com.google.gson.Gson;
 
 @WebServlet("/user/*")

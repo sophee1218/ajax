@@ -1,4 +1,4 @@
-package com.ajax.filter;
+package com.ajax.test.filter;
 
 import java.io.IOException;
 

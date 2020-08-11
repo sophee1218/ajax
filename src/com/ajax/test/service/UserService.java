@@ -1,4 +1,4 @@
-package com.ajax.service;
+package com.ajax.test.service;
 
 import java.util.Map;
 
