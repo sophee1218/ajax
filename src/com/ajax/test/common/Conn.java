@@ -90,4 +90,11 @@ public class Conn
 		close(ps);
 		close(con);
 	}
+
+	public static Connection getConnection()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

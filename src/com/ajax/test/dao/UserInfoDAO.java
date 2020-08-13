@@ -9,5 +9,6 @@ public interface UserInfoDAO
 	int updatetUserInfo(Map<String,Object> ui);
 	int deleteUserInfo(Map<String,Object> ui);
 	Map<String,Object> selectUserInfo(Map<String,Object> ui);
+	Map<String,Object> selectUserInfoByUiId(String UiId);
 	List<Map<String,Object>> selectUserInfoList(Map<String,Object> ui);
 }

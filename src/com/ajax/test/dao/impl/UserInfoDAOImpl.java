@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ajax.test.common.Conn;
 import com.ajax.test.dao.UserInfoDAO;
+import com.ajax.test.servlet.InitServlet;
 
 public class UserInfoDAOImpl implements UserInfoDAO
 {
@@ -21,35 +21,32 @@ public class UserInfoDAOImpl implements UserInfoDAO
 		Connection con = null;
 		PreparedStatement ps = null;
 		int result = 0;
-
 		try
 		{
-			con = Conn.open();
-			String sql = "insert into user_info(\r\n" + "UI_NUM,\r\n" + "UI_NAME,\r\n" + "UI_AGE,\r\n" + "UI_BIRTH,\r\n"
-					+ "UI_ID,\r\n" + "UI_PASSWORD,\r\n" + "UI_PHONE,\r\n" + "UI_EMAIL,\r\n" + "UI_CREDAT,\r\n"
-					+ "UI_NICKNAME)\r\n" + "values(seq_ui_num,?,?,?,?,?,?,?,sysdate,?)";
+			con = InitServlet.getConnection();
+			String sql = "insert into user_info(UI_NUM, UI_NAME, UI_AGE, UI_BIRTH, UI_ID, UI_PWD, UI_PHONE, UI_EMAIL, ui_CREDAT, "
+					+ " UI_NICKNAME) values(seq_UI_NUM.nextval,?,?,?,?,?,?,?,sysdate,?)";
 
 			ps = con.prepareStatement(sql);
 			ps.setObject(1, ui.get("UI_NAME"));
 			ps.setInt(2, (int) ui.get("UI_AGE"));
 			ps.setObject(3, ui.get("UI_BIRTH"));
 			ps.setObject(4, ui.get("UI_ID"));
-			ps.setObject(5, ui.get("UI_PASSWORD"));
+			ps.setObject(5, ui.get("UI_PWD"));
 			ps.setObject(6, ui.get("UI_PHONE"));
 			ps.setObject(7, ui.get("UI_EMAIL"));
 			ps.setObject(8, ui.get("UI_NICKNAME"));
-
 			result = ps.executeUpdate();
 			con.commit();
-
+			return result;
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 		} finally
 		{
-			Conn.close(ps, con);
+			InitServlet.close(ps, con);
 		}
-		return result;
+		return 0;
 	}
 
 	@Override
@@ -60,32 +57,31 @@ public class UserInfoDAOImpl implements UserInfoDAO
 		int result = 0;
 		try
 		{
-			con = Conn.open();
-			String sql = "update user_info set(\r\n" + "UI_NAME = ?,\r\n" + "UI_AGE = ?,\r\n" + "UI_BIRTH = ?,\r\n"
-					+ "UI_PASSWORD = ?,\r\n" + "UI_PHONE = ?,\r\n" + "UI_EMAIL = ?,\r\n" + "UI_NICKNAME = ?,\r\n"
-					+ "where ui_num = ?\r\n" + ")";
+			con = InitServlet.getConnection();
+			String sql = "update user_info set(UI_NAME = ?, UI_AGE = ?, UI_BIRTH = ?, UI_PWD = ?, UI_PHONE = ?, UI_EMAIL = ?, UI_NICKNAME = ?,"
+					+ " where UI_NUM = ?)";
 
 			ps = con.prepareStatement(sql);
 
 			ps.setObject(1, ui.get("UI_NAME"));
 			ps.setInt(2, (int) ui.get("UI_AGE"));
 			ps.setObject(3, ui.get("UI_BIRTH"));
-			ps.setObject(4, ui.get("UI_PASSWORD"));
+			ps.setObject(4, ui.get("UI_PWD"));
 			ps.setObject(5, ui.get("UI_PHONE"));
 			ps.setObject(6, ui.get("UI_EMAIL"));
 			ps.setObject(7, ui.get("UI_NICKNAME"));
-			ps.setObject(8, ui.get("ui_num"));
-
+			ps.setObject(8, ui.get("UI_NUM"));
 			result = ps.executeUpdate();
 			con.commit();
+			return result;
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 		} finally
 		{
-			Conn.close(ps, con);
+			InitServlet.close(ps, con);
 		}
-		return result;
+		return 0;
 
 	}
 
@@ -95,26 +91,23 @@ public class UserInfoDAOImpl implements UserInfoDAO
 		Connection con = null;
 		PreparedStatement ps = null;
 		int result = 0;
-
 		try
 		{
-			con = Conn.open();
-			String sql = "delete from user_info where ui_num=?";
+			con = InitServlet.getConnection();
+			String sql = "delete from user_info where UI_NUM=?";
 			ps = con.prepareStatement(sql);
-			ps.setObject(1, "ui_num");
-			result = ps.executeUpdate();
-
+			ps.setObject(1, ui.get("UI_NUM"));
 			result = ps.executeUpdate();
 			con.commit();
-
+			return result;
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 		} finally
 		{
-			Conn.close(ps, con);
+			InitServlet.close(ps, con);
 		}
-		return result;
+		return 0;
 
 	}
 
@@ -124,40 +117,37 @@ public class UserInfoDAOImpl implements UserInfoDAO
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-
+		Map<String, Object> ui_map = new HashMap<>();
 		try
 		{
-			con = Conn.open();
-			String sql = "select ui_num,ui_name,ui_age,ui_birth,ui_id,ui_password,ui_phone,ui_email,ui_credat,ui_nickname from user_info where ui_num = ?;";
+			con = InitServlet.getConnection();
+			String sql = "select UI_NUM,UI_NAME,UI_AGE,UI_BIRTH,UI_ID,UI_PWD,UI_PHONE,UI_EMAIL,ui_CREDAT,UI_NICKNAME from user_info where UI_NUM = ?";
 
 			ps = con.prepareStatement(sql);
-			ps.setObject(1, ui.get("ui_num"));
+			ps.setObject(1, ui.get("UI_NUM"));
 			rs = ps.executeQuery();
-
 			if (rs.next())
 			{
-				Map<String, Object> ui_map = new HashMap<>();
-				ui_map.put("ui_num", rs.getObject("ui_num"));
-				ui_map.put("ui_name", rs.getObject("ui_name"));
-				ui_map.put("ui_age", rs.getObject("ui_age"));
-				ui_map.put("ui_birth", rs.getObject("ui_birth"));
-				ui_map.put("ui_id", rs.getObject("ui_id"));
-				ui_map.put("ui_password", rs.getObject("ui_password"));
-				ui_map.put("ui_phone", rs.getObject("ui_phone"));
-				ui_map.put("ui_email", rs.getObject("ui_email"));
-				ui_map.put("ui_credat", rs.getObject("ui_credat"));
-				ui_map.put("ui_nickname", rs.getObject("ui_nickname"));
-
+				ui_map.put("UI_NUM", rs.getObject("UI_NUM"));
+				ui_map.put("UI_NAME", rs.getObject("UI_NAME"));
+				ui_map.put("UI_AGE", rs.getObject("UI_AGE"));
+				ui_map.put("UI_BIRTH", rs.getObject("UI_BIRTH"));
+				ui_map.put("UI_ID", rs.getObject("UI_ID"));
+				ui_map.put("UI_PWD", rs.getObject("UI_PWD"));
+				ui_map.put("UI_PHONE", rs.getObject("UI_PHONE"));
+				ui_map.put("UI_EMAIL", rs.getObject("UI_EMAIL"));
+				ui_map.put("ui_CREDAT", rs.getObject("ui_CREDAT"));
+				ui_map.put("UI_NICKNAME", rs.getObject("UI_NICKNAME"));
+				
 				return ui_map;
-
 			}
-
+			
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 		} finally
 		{
-			Conn.close(rs, ps, con);
+			InitServlet.close(rs, ps, con);
 		}
 		return null;
 	}
@@ -172,50 +162,94 @@ public class UserInfoDAOImpl implements UserInfoDAO
 
 		try
 		{
-			con = Conn.open();
-			String sql = "select ui_num,ui_name,ui_age,ui_birth,ui_id,ui_password,ui_phone,ui_email,ui_credat,ui_nickname from user_info";
+			con = InitServlet.getConnection();
+			String sql = "select UI_NUM,UI_NAME,UI_AGE,UI_BIRTH,UI_ID,UI_PWD,UI_PHONE,UI_EMAIL,ui_CREDAT,UI_NICKNAME from user_info";
 			ps = con.prepareStatement(sql);
 			rs = ps.executeQuery();
-
 			while (rs.next())
 			{
 				Map<String, Object> ui_map = new HashMap<>();
-				ui_map.put("ui_num", rs.getObject("ui_num"));
-				ui_map.put("ui_name", rs.getObject("ui_name"));
-				ui_map.put("ui_age", rs.getObject("ui_age"));
-				ui_map.put("ui_birth", rs.getObject("ui_birth"));
-				ui_map.put("ui_id", rs.getObject("ui_id"));
-				ui_map.put("ui_password", rs.getObject("ui_password"));
-				ui_map.put("ui_phone", rs.getObject("ui_phone"));
-				ui_map.put("ui_email", rs.getObject("ui_email"));
-				ui_map.put("ui_credat", rs.getObject("ui_credat"));
-				ui_map.put("ui_nickname", rs.getObject("ui_nickname"));
+				ui_map.put("UI_NUM", rs.getObject("UI_NUM"));
+				ui_map.put("UI_NAME", rs.getObject("UI_NAME"));
+				ui_map.put("UI_AGE", rs.getObject("UI_AGE"));
+				ui_map.put("UI_BIRTH", rs.getObject("UI_BIRTH"));
+				ui_map.put("UI_ID", rs.getObject("UI_ID"));
+				ui_map.put("UI_PWD", rs.getObject("UI_PWD"));
+				ui_map.put("UI_PHONE", rs.getObject("UI_PHONE"));
+				ui_map.put("UI_EMAIL", rs.getObject("UI_EMAIL"));
+				ui_map.put("ui_CREDAT", rs.getObject("ui_CREDAT"));
+				ui_map.put("UI_NICKNAME", rs.getObject("UI_NICKNAME"));
 				uiList.add(ui_map);
-
 			}
+			return uiList;
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 		} finally
 		{
-			Conn.close(rs, ps, con);
+			InitServlet.close(rs, ps, con);
 		}
-		return uiList;
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> selectUserInfoByUiId(String uiId)
+	{
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try
+		{
+			con = InitServlet.getConnection();
+			String sql = "select * from user_info where UI_ID = ?";
+
+			ps = con.prepareStatement(sql);
+			ps.setObject(1, uiId);
+			rs = ps.executeQuery();
+
+			Map<String, Object> ui_map = new HashMap<>();
+			if (rs.next())
+			{
+				ui_map.put("UI_NUM", rs.getObject("UI_NUM"));
+				ui_map.put("UI_NAME", rs.getObject("UI_NAME"));
+				ui_map.put("UI_AGE", rs.getObject("UI_AGE"));
+				ui_map.put("UI_BIRTH", rs.getObject("UI_BIRTH"));
+				ui_map.put("UI_ID", rs.getObject("UI_ID"));
+				ui_map.put("UI_PWD", rs.getObject("UI_PWD"));
+				ui_map.put("UI_PHONE", rs.getObject("UI_PHONE"));
+				ui_map.put("UI_EMAIL", rs.getObject("UI_EMAIL"));
+				ui_map.put("UI_CREDAT", rs.getObject("UI_CREDAT"));
+				ui_map.put("UI_NICKNAME", rs.getObject("UI_NICKNAME"));
+
+				return ui_map;
+
+			}
+
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		} finally
+		{
+			InitServlet.close(rs, ps, con);
+		}
+		return null;
 	}
 
 	public static void main(String[] args)
 	{
 		UserInfoDAO userInfoDao = new UserInfoDAOImpl();
 		Map<String, Object> ui = new HashMap<>();
-		ui.put("UI_NAME", "신송희");
-		ui.put("UI_age", 30);
-		ui.put("UI_birth", "911218");
-		ui.put("UI_id", "test");
-		ui.put("UI_password", "test");
-		ui.put("UI_phone", "01087117645");
-		ui.put("UI_email", "test");
-		ui.put("UI_nickname", "송송");
-		userInfoDao.insertUserInfo(ui);
-		
+//		ui.put("UI_NAME", "신송희");
+//		ui.put("UI_AGE", 30);
+//		ui.put("UI_BIRTH", "911218");
+//		ui.put("UI_ID", "test");
+//		ui.put("UI_PWD", "test");
+//		ui.put("UI_PHONE", "01087117645");
+//		ui.put("UI_EMAIL", "test");
+//		ui.put("UI_NICKNAME", "송송");
+//		ui.put("UI_NUM", 1);
+
+		System.out.println(userInfoDao.selectUserInfoList(ui));
 	}
 }
