@@ -17,14 +17,17 @@ public class UserServiceImpl implements UserService
 		Map<String, Object> rMap = new HashMap<>();
 		rMap.put("result", "fail");
 		rMap.put("msg", "아이디를 확인해주세요");
-		if ("test".equals(user.get("id")))
-		{
-			rMap.put("msg", "비밀번호를 확인해주세요");
-
-			if ("test".equals(user.get("pwd")))
-			{
+		String uiId = user.get("UI_ID");
+		uiDao.selectUserInfoByUiId(uiId);
+		Map<String,Object> tmpUser = uiDao.selectUserInfoByUiId(uiId);
+		if(tmpUser!=null) {
+			String tmpUiPwd = tmpUser.get("UI_PWD").toString();
+			String uiPwd = user.get("UI_PWD");
+			if(tmpUiPwd.equals(uiPwd)) {
 				rMap.put("result", "ok");
 				rMap.put("msg", "로그인 완료");
+				rMap.put("user", tmpUser);
+				
 			}
 		}
 		return rMap;
@@ -41,7 +44,7 @@ public class UserServiceImpl implements UserService
 		if(result==1)
 		{
 			rMap.put("msg", "가입성공");
-			rMap.put("url", "/views/user/login");
+			rMap.put("url", "/user/login");
 		}
 		
 		return rMap;
@@ -56,6 +59,7 @@ public class UserServiceImpl implements UserService
 		rMap.put("result", "false");
 		if(uiDao.selectUserInfoByUiId(uiId)==null) {
 			rMap.put("msg", "사용 가능한 아이디입니다");
+			rMap.put("result", "true");
 		}
 		return rMap;
 	}

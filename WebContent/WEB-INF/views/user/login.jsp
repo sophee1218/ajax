@@ -19,6 +19,7 @@
 		</tr>
 		<tr>
 			<th colspan="2"><button onclick="doLogin()">로그인</button></th>
+			
 		</tr>
 	</table>
 
@@ -29,8 +30,8 @@
 			var pwd = document.querySelector('#pwd').value;
 			var params =
 			{
-				id : id,
-				pwd : pwd
+				UI_ID : id,
+				UI_PWD : pwd
 			}
 			params.id = id;
 

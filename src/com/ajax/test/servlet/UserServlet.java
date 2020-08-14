@@ -31,7 +31,7 @@ public class UserServlet extends HttpServlet
 		String cmd = request.getRequestURI().substring(idx);
 		PrintWriter pw = response.getWriter();
 		if("checkid".equals(cmd)) {
-			String uiId = request.getParameter("ui_id");
+			String uiId = request.getParameter("UI_ID");
 			Map<String,String> rMap = userService.checkId(uiId);
 			pw.println(gson.toJson(rMap));
 		
@@ -58,7 +58,7 @@ public class UserServlet extends HttpServlet
 			if ("ok".equals(rMap.get("result")))
 			{
 				HttpSession session = request.getSession();
-				session.setAttribute("id", pMap.get("id"));
+				session.setAttribute("user", rMap.get("user"));
 			}
 
 			response.getWriter().append(gson.toJson(rMap));

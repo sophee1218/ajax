@@ -9,15 +9,13 @@
 <body>
 <script>
 var isChecked = false;
+
+
 function checkValue(formObj){
 	if(!isChecked){
 		alert('중복확인을 눌러주세요');
 		return false;
 	}
-}
-
-
-function checkValue(formObj){
 	var UI_ID = document.querySelector('#UI_ID');
 	if(UI_ID.value.trim().length<4)
 		{
@@ -70,12 +68,12 @@ function checkValue(formObj){
 function checkId(){
 	var id = document.querySelector('#UI_ID').value;
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET','/user/checkid?ui_id=' + id);
+	xhr.open('GET','/user/checkid?UI_ID=' + id);
 	xhr.onreadystatechange = function(){
 		if(xhr.readyState==4){
 			if(xhr.status==200){
 				var res = JSON.parse(xhr.responseText);
-				alert(xhr.msg);
+				alert(res.msg);
 				if(res.result=='true'){
 					isChecked = true;
 				}
@@ -85,8 +83,8 @@ function checkId(){
 	xhr.send();
 }
 </script>
-<form action="/user/join" method="post" onsubmit="return checkValue()">
-	ID : <input type="text" name="UI_ID" id="UI_ID"> 
+<form action="/user/join" method="post" onsubmit="return checkValue(this)">
+	ID : <input type="text" name="UI_ID" id="UI_ID" onchange="isChecked=false;"> 
 	<button type="button" onclick="checkId()">중복확인</button><br>
 	PWD : <input type="password" name="UI_PWD" id="UI_PWD"> <br>
 	Name : <input type="text" name="UI_NAME" id="UI_NAME"> <br>
